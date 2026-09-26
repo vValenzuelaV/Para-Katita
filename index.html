@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anuario de Primavera</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="sunset-background">
+        <!-- Luces tenues del atardecer -->
+        <div class="orb o1"></div>
+        <div class="orb o2"></div>
+        <div class="orb o3"></div>
+        <div class="orb o4"></div>
+        <div class="orb o5"></div>
+        <div class="orb o6"></div>
+    </div>
+
+    <main class="container">
+        <header class="glass-header">
+            <h1>Paisajes que me recuerdan a ti</h1>
+            <p>No son muchos pero me transmitieron el estar hay un poco de la paz que sentia contigo</p>
+        </header>
+
+        <section id="gallery" class="photo-grid">
+            <!-- Las fotos se agregarán aquí dinámicamente -->
+        </section>
+    </main>
+
+    <!-- Botón flotante de carga (Estilo App para móviles) -->
+    <div class="floating-upload">
+        <input type="file" id="file-upload" multiple accept="image/*">
+        <label for="file-upload" class="fab-btn" title="Añadir fotos">
+            <span>+</span>
+        </label>
+    </div>
+
+    <!-- Modal para ver la imagen en pantalla completa -->
+    <div id="image-modal" class="modal">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="full-image">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
