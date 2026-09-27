@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('image-modal');
     const fullImage = document.getElementById('full-image');
     const closeBtn = document.querySelector('.close-btn');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+
+    let loadedImages = [];
+    let currentModalIndex = 0;
 
     // Directorio donde estarán las fotos
     const imageFolder = 'fotos/';
@@ -56,9 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
         img.src = photoUrl;
         img.alt = `Paisaje recuerdo ${index}`;
 
+        const arrayIndex = loadedImages.length;
+        loadedImages.push(photoUrl);
+
         // Añadir evento click para abrir en pantalla completa
         photoItem.addEventListener('click', () => {
-            openModal(photoUrl);
+            openModal(arrayIndex);
         });
 
         photoItem.appendChild(img);
@@ -66,10 +74,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Modal interacciones
-    function openModal(src) {
-        fullImage.src = src;
+    function openModal(index) {
+        currentModalIndex = index;
+        fullImage.src = loadedImages[currentModalIndex];
         modal.style.display = 'flex';
         void modal.offsetWidth; // Forzar reflujo para animación
+    }
+
+    function showNext() {
+        if (loadedImages.length === 0) return;
+        currentModalIndex = (currentModalIndex + 1) % loadedImages.length;
+        fullImage.src = loadedImages[currentModalIndex];
+    }
+
+    function showPrev() {
+        if (loadedImages.length === 0) return;
+        currentModalIndex = (currentModalIndex - 1 + loadedImages.length) % loadedImages.length;
+        fullImage.src = loadedImages[currentModalIndex];
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showPrev();
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showNext();
+        });
     }
 
     closeBtn.addEventListener('click', () => closeModal());
@@ -79,8 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+        if (modal.style.display === 'flex') {
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'ArrowRight') showNext();
+            if (e.key === 'ArrowLeft') showPrev();
+        }
     });
+
+    // Soporte para gestos táctiles (Swipe) en celulares
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    modal.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    modal.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) showNext(); // deslizar izquierda (ver siguiente)
+        if (touchEndX > touchStartX + 50) showPrev(); // deslizar derecha (ver anterior)
+    }
 
     function closeModal() {
         modal.style.display = 'none';
